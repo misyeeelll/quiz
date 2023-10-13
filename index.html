@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 style="color: #fff;">JavaScript Quiz</h1>
+    <hr>
+    <div id="quiz-container">
+        <div id="question-container">
+            <h2 id="question"></h2>
+        </div>
+        <div id="answers-container">
+            <ul id="answers">
+            </ul>
+        </div>
+        <p id="result"></p>
+        <p id="timer"></p>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What does CSS stand for?",
+                answers: ["Cascading Style Sheets", "Creative Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+                correctAnswer: "Cascading Style Sheets"
+            },
+            {
+                question: "Which HTML attribute is used to define inline styles?",
+                answers: ["class", "styles", "style", "font"],
+                correctAnswer: "style"
+            },
+            {
+                question: "Which CSS property controls the text size?",
+                answers: ["font-size", "text-size", "font-style", "text-style"],
+                correctAnswer: "font-size"
+            },
+            {
+                question: "What is the default value of the position property?",
+                answers: ["absolute", "static", "relative", "fixed"],
+                correctAnswer: "static"
+            },
+            {
+                question: "How do you select elements with class name 'test'?",
+                answers: ["#test", ".test", "*test", "test"],
+                correctAnswer: ".test"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let timeLeft = 10; // Time in seconds
+        let timerInterval;
+
+        const questionElement = document.getElementById("question");
+        const answersElement = document.getElementById("answers");
+        const resultElement = document.getElementById("result");
+        const timerElement = document.getElementById("timer");
+
+        function startTimer() {
+            timerInterval = setInterval(function () {
+                timeLeft--;
+                timerElement.innerText = `Time left: ${timeLeft} seconds`;
+
+                if (timeLeft === 0) {
+                    clearInterval(timerInterval);
+                    showResult();
+                }
+            }, 1000);
+        }
+
+        function showQuestion(question) {
+            questionElement.textContent = question.question;
+            answersElement.innerHTML = "";
+
+            question.answers.forEach(answer => {
+                const li = document.createElement("li");
+                li.textContent = answer;
+                li.addEventListener("click", () => handleAnswer(answer));
+                answersElement.appendChild(li);
+            });
+        }
+
+        function handleAnswer(selectedAnswer) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (selectedAnswer === currentQuestion.correctAnswer) {
+                resultElement.textContent = "Correct!";
+            } else {
+                resultElement.textContent = "Incorrect!";
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion(questions[currentQuestionIndex]);
+            } 
+            else {
+                clearInterval(timerInterval);
+                showResult();
+            }
+        }
+
+        function showResult() {
+            questionElement.textContent = "Quiz Finished!";
+            answersElement.innerHTML = "";
+            resultElement.textContent = `Your score: ${currentQuestionIndex}/${questions.length}`;
+        }
+
+        showQuestion(questions[currentQuestionIndex]);
+        startTimer();
+    </script>
+</body>
+</html>
